@@ -3,7 +3,7 @@ import outsideClick from "./outsideclick.js";
 export default function initMenuMobile() {
   const menuButton = document.querySelector('[data-menu="button"]');
   const menuList = document.querySelector('[data-menu="list"]');
-  const events = ["click"];
+  const events = ["touchstart"];
 
   if (menuButton) {
     function openMenu(event) {
