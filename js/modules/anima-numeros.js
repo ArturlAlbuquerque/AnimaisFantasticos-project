@@ -25,6 +25,12 @@ export default function initAnimaNumeros() {
   }
 
   const observerTarget = document.querySelector(".numeros");
+
+  if (observerTarget.classList.contains("ativo")) {
+    animaNumeros();
+    return;
+  }
+
   const observer = new MutationObserver(handleMutation);
 
   observer.observe(observerTarget, { attributes: true });
