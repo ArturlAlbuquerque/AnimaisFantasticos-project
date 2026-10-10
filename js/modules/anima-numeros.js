@@ -1,37 +1,46 @@
-export default function initAnimaNumeros() {
-  function animaNumeros() {
-    const numeros = document.querySelectorAll("[data-numero]");
-
-    numeros.forEach((numero) => {
-      const total = +numero.innerText;
-      const incremento = Math.floor(total / 100);
-      let start = 0;
-      const timer = setInterval(() => {
-        start += incremento;
-        numero.innerText = start;
-        if (start > total) {
-          numero.innerText = total;
-          clearInterval(timer);
-        }
-      }, 25 * Math.random());
-    });
+export default class AnimaNumeros {
+  constructor(numeros, observerTarget, observerClass) {
+    this.numeros = document.querySelectorAll(numeros);
+    this.observerTarget = document.querySelector(observerTarget);
+    this.observerClass = observerClass;
+    this.handleMutation = this.handleMutation.bind(this);
   }
 
-  function handleMutation(mutation) {
-    if (mutation[0].target.classList.contains("ativo")) {
-      observer.disconnect();
-      animaNumeros();
+  static incrementaNumero(numero) {
+    const total = +numero.innerText;
+    const incremento = Math.floor(total / 100);
+    let start = 0;
+    const timer = setInterval(() => {
+      start += incremento;
+      numero.innerText = start;
+      if (start > total) {
+        numero.innerText = total;
+        clearInterval(timer);
+      }
+    }, 25 * Math.random());
+  }
+
+  animaNumeros() {
+    this.numeros.forEach((numero) => this.constructor.incrementaNumero(numero));
+  }
+
+  //function to handle the mutation event. If the observerTarget has the observerClass, disconnect the observer and call animaNumeros().
+  handleMutation(mutation) {
+    if (mutation[0].target.classList.contains(this.observerClass)) {
+      this.observer.disconnect();
+      this.animaNumeros();
     }
   }
-
-  const observerTarget = document.querySelector(".numeros");
-
-  if (observerTarget.classList.contains("ativo")) {
-    animaNumeros();
-    return;
+  //Add a MutationObserver to watch for when the observerTarget element has the observerClass added to it. When that happens, call animaNumeros() and disconnect the observer.
+  addMutationObserver() {
+    this.observer = new MutationObserver(this.handleMutation);
+    this.observer.observe(this.observerTarget, { attributes: true });
   }
 
-  const observer = new MutationObserver(handleMutation);
-
-  observer.observe(observerTarget, { attributes: true });
+  init() {
+    if (this.numeros.length && this.observerTarget) {
+      this.addMutationObserver();
+    }
+    return this;
+  }
 }
