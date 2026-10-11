@@ -1,5 +1,5 @@
 import SmoothScroll from "./modules/scroll-suave.js";
-import initAnimationScroll from "./modules/scroll-animacao.js";
+import AnimationScroll from "./modules/scroll-animacao.js";
 import Accordion from "./modules/accordion.js";
 import TabNav from "./tabnav.js";
 import Modal from "./modules/modal.js";
@@ -13,7 +13,9 @@ import fetchBitcoin from "./modules/fetch-bitcoin.js";
 const smoothScroll = new SmoothScroll("[data-menu='suave'] a[href^='#']");
 smoothScroll.init();
 
-initAnimationScroll();
+const animationScroll = new AnimationScroll('[data-anime="scroll"]');
+animationScroll.init();
+
 const accordion = new Accordion("[data-anime='accordion'] dt");
 accordion.init();
 
